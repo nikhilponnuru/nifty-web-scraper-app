@@ -1,0 +1,406 @@
+<!--
+ @author-nikhil ponnuru
+-->
+
+<!--this file is a template using Jinja2 template engine for cards for both loosers and gainers -->
+
+<script>
+
+//code to handle click events on tabs within cards
+
+    $(".btn-pref .btn").click(function() {
+        $(".btn-pref .btn").removeClass("btn-primary").addClass("btn-default");
+
+        $(this).removeClass("btn-default").addClass("btn-primary");
+    });
+
+
+//functions for generating canvas image of both lower and upper triangles
+
+    function drawTriangle(context, x, y, triangleWidth, triangleHeight, fillStyle) {
+        context.beginPath();
+        context.moveTo(x, y);
+        context.lineTo(x + triangleWidth / 2, y + triangleHeight);
+        context.lineTo(x - triangleWidth / 2, y + triangleHeight);
+        context.closePath();
+        context.fillStyle = fillStyle;
+        context.fill();
+    }
+
+
+    for (i = 0; i < 10; i++) {
+        var canvas = document.getElementsByClassName("myCanvas")[i];
+        var context = canvas.getContext("2d");
+
+        var grd;
+        var triangleWidth = 25;
+        var triangleHeight = 25;
+        var triangleY = canvas.height / 2 - triangleWidth / 2;
+
+
+        grd = context.createLinearGradient(canvas.width / 5, triangleY, canvas.width / 5, triangleY + triangleHeight);
+        grd.addColorStop(0, "green");
+        drawTriangle(context, canvas.width / 2, triangleY, triangleWidth, triangleHeight, grd);
+
+    }
+
+
+
+    function drawTriangle_rotated(context, x, y, triangleWidth, triangleHeight, fillStyle) {
+        context.beginPath();
+        // translate context to center of canvas
+        context.translate(canvas.width, canvas.height);
+
+        // rotate 45 degrees clockwise
+        context.rotate(Math.PI);
+        context.moveTo(x, y);
+        context.lineTo(x + triangleWidth / 2, y + triangleHeight);
+        context.lineTo(x - triangleWidth / 2, y + triangleHeight);
+        context.closePath();
+        context.fillStyle = fillStyle;
+        context.fill();
+
+    }
+
+
+    for (i = 0; i < 10; i++) {
+        var canvas = document.getElementsByClassName("canvas")[i];
+        console.log(typeof(String(canvas)))
+        var context = canvas.getContext("2d");
+
+        var grd;
+        var triangleWidth = 25;
+        var triangleHeight = 25;
+        var triangleY = canvas.height / 2 - triangleWidth / 2;
+
+
+        grd = context.createLinearGradient(canvas.width / 5, triangleY, canvas.width / 5, triangleY + triangleHeight);
+        grd.addColorStop(0, "red");
+        drawTriangle_rotated(context, canvas.width / 2, triangleY, triangleWidth, triangleHeight, grd);
+
+    }
+</script>
+
+<h2 align="center">Top 10 Gainer and Looser details</h2>
+<br>
+<h3 align="center">Gainers</h3>
+
+<!--cards for gainers -->
+
+
+{%for i in range(0,10)%}
+<div class="col-lg-6 col-sm-6" style="width:640px;margin-left:200px;margin-top:15px">
+    <div class="card hovercard" style="width:610px;background-color:#C0C0C0">
+        <p style="float:left;margin-top:20px">LTP</p>
+        <h2 style="float:left;margin-top:20px" id="ltp">{{gainers["data"][i]["ltp"]}}</h2>
+        <h6 style="float:left;margin-top:37px;padding-left:5px">INR</h6>
+
+
+
+        <div class="card-background" style="width:610px">
+
+            <p style="float:right;margin-top:20px;margin-right:90px;">% Change
+            </p>
+            <h2 style="float:right;margin-top:40px;padding-left:5px"><span style="color:green;">{{gainers["data"][i]["netPrice"]}} </span></h2>
+
+            <canvas class="myCanvas" width="25" height="25" style=" margin-top:10px;float:right" />
+
+
+
+
+        </div>
+        <div class="card-info" style="width:612px; "> <span class="card-title" id="symbol">{{i+1}} . {{gainers["data"][i]["symbol"]}}</span>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="btn-pref btn-group btn-group-justified btn-group-lg" role="group" aria-label="..." style="width:610px">
+        <div class="btn-group" style="width:8px">
+            <button type="button" id="stars" class="btn btn-primary " href="#tab1{{i}}" data-toggle="tab">
+                <div class="hidden-xs" id="tradedqty">Traded Qty</div>
+            </button>
+        </div>
+
+        <div class="btn-group" style="width:11px">
+            <button type="button" id="favorites" class="btn btn-default" href="#tab2{{i}}" data-toggle="tab">
+                <div class="hidden-xs" id="value">Value(in Lakhs)</div>
+            </button>
+        </div>
+
+        <div class="btn-group" style="width:5px">
+            <button type="button" class="btn btn-default" href="#tab3{{i}}" data-toggle="tab">
+                <div class="hidden-xs" id="open">open</div>
+            </button>
+        </div>
+
+        <div class="btn-group" style="width:5px">
+            <button type="button" class="btn btn-default" href="#tab4{{i}}" data-toggle="tab">
+                <div class="hidden-xs" id="high">High</div>
+            </button>
+        </div>
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-default" href="#tab5{{i}}" data-toggle="tab">
+                <div class="hidden-xs" >Low</div>
+            </button>
+        </div>
+
+        <div class="btn-group" style="width:9px">
+            <button type="button" class="btn btn-default" href="#tab6{{i}}" data-toggle="tab">
+                <div class=".hidden-xs-down" >Prev.
+Close</div>
+            </button>
+        </div>
+
+    </div>
+
+    <div class="well">
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="tab1{{i}}">
+                <h3>{{gainers["data"][i]["tradedQantity"]}}</h3>
+            </div>
+            <div class="tab-pane fade in" id="tab2{{i}}">
+                <h3>{{gainers["data"][i]["trnoverInLakhs"]}}</h3>
+            </div>
+            <div class="tab-pane fade in" id="tab3{{i}}">
+                <h3>{{gainers["data"][i]["openPrice"]}}</h3>
+            </div>
+            <div class="tab-pane fade in" id="tab4{{i}}">
+                <h3>{{gainers["data"][i]["highPrice"]}}</h3>
+            </div>
+            <div class="tab-pane fade in" id="tab5{{i}}">
+                <h3>{{gainers["data"][i]["lowPrice"]}}</h3>
+            </div>
+            <div class="tab-pane fade in" id="tab6{{i}}">
+                <h3>{{gainers["data"][i]["openPrice"]}}</h3>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+{%endfor%}
+
+
+
+<br>
+<br>
+<hr>
+<h3 align="center">Loosers</h3>
+<style>
+    hr {
+        margin-top: 30px;
+        width: 1000px;
+        border: 2px solid black
+    }
+</style>
+
+
+<!--cards for loosers -->
+
+
+{%for i in range(0,10)%}
+
+
+<div class="col-lg-6 col-sm-6" style="width:640px;margin-left:200px;margin-top:15px">
+    <div class="card hovercard" style="width:610px;background-color:#C0C0C0">
+        <p style="float:left;margin-top:20px">LTP</p>
+        <h2 style="float:left;margin-top:20px">{{loosers["data"][i]["ltp"]}}</h2>
+        <h6 style="float:left;margin-top:37px;padding-left:5px">INR</h6>
+
+
+        <div class="card-background" style="width:610px">
+
+            <p style="float:right;margin-top:20px;margin-right:90px;">% Change
+            </p>
+            <h2 style="float:right;margin-top:40px;padding-left:5px"><span style="color:red;">{{loosers["data"][i]["netPrice"]}}</span></h2>
+
+            <canvas class="canvas" width="25" height="25" style=" margin-top:10px;float:right" />
+
+
+
+
+        </div>
+        <div class="card-info" style="width:612px; "> <span class="card-title">{{i+1}} . {{loosers["data"][i]["symbol"]}}</span>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="btn-pref btn-group btn-group-justified btn-group-lg" role="group" aria-label="..." style="width:610px">
+        <div class="btn-group" style="width:8px">
+            <button type="button" class="btn btn-primary " href="#ltab1{{i}}" data-toggle="tab">
+                <div class="hidden-xs" >Traded Qty</div>
+            </button>
+        </div>
+
+        <div class="btn-group" style="width:11px">
+            <button type="button" class="btn btn-default" href="#ltab2{{i}}" data-toggle="tab">
+                <div class="hidden-xs" >Value(in Lakhs)</div>
+            </button>
+        </div>
+
+        <div class="btn-group" style="width:5px">
+            <button type="button" class="btn btn-default" href="#ltab3{{i}}" data-toggle="tab">
+                <div class="hidden-xs" >open</div>
+            </button>
+        </div>
+
+        <div class="btn-group" style="width:5px">
+            <button type="button" class="btn btn-default" href="#ltab4{{i}}" data-toggle="tab">
+                <div class="hidden-xs" >High</div>
+            </button>
+        </div>
+
+        <div class="btn-group">
+            <button type="button" class="btn btn-default" href="#ltab5{{i}}" data-toggle="tab">
+                <div class="hidden-xs" >Low</div>
+            </button>
+        </div>
+
+        <div class="btn-group" style="width:9px">
+            <button type="button" class="btn btn-default" href="#ltab6{{i}}" data-toggle="tab">
+                <div class=".hidden-xs-down" >Prev.
+Close</div>
+            </button>
+        </div>
+
+    </div>
+
+    <div class="well">
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="ltab1{{i}}">
+                <h3>{{loosers["data"][i]["tradedQantity"]}}</h3>
+            </div>
+            <div class="tab-pane fade in" id="ltab2{{i}}">
+                <h3>{{loosers["data"][i]["trnoverInLakhs"]}}</h3>
+            </div>
+            <div class="tab-pane fade in" id="ltab3{{i}}">
+                <h3>{{loosers["data"][i]["openPrice"]}}</h3>
+            </div>
+            <div class="tab-pane fade in" id="ltab4{{i}}">
+                <h3>{{loosers["data"][i]["highPrice"]}}</h3>
+            </div>
+            <div class="tab-pane fade in" id="ltab5{{i}}">
+                <h3>{{loosers["data"][i]["lowPrice"]}}</h3>
+            </div>
+            <div class="tab-pane fade in" id="ltab6{{i}}">
+                <h3>{{loosers["data"][i]["openPrice"]}}</h3>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+{%endfor%}
+
+
+
+<style type="text/css">
+    .card {
+        margin-top: 20px;
+        padding: 30px;
+        background-color: gray;
+        -webkit-border-top-left-radius: 5px;
+        -moz-border-top-left-radius: 5px;
+        border-top-left-radius: 5px;
+        -webkit-border-top-right-radius: 5px;
+        -moz-border-top-right-radius: 5px;
+        border-top-right-radius: 5px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .card.hovercard {
+        position: relative;
+        padding-top: 0;
+        overflow: hidden;
+        text-align: center;
+        background-color: #fff;
+        background-color: rgba(255, 255, 255, 1);
+    }
+
+    .card.hovercard .card-background {
+        height: 130px;
+    }
+
+    .card-background img {
+        -webkit-filter: blur(25px);
+        -moz-filter: blur(25px);
+        -o-filter: blur(25px);
+        -ms-filter: blur(25px);
+        filter: blur(25px);
+        margin-left: -100px;
+        margin-top: -200px;
+        min-width: 130%;
+    }
+
+    .card.hovercard .useravatar {
+        position: absolute;
+        top: 15px;
+        left: 0;
+        right: 0;
+    }
+
+    .card.hovercard .useravatar img {
+        width: 100px;
+        height: 100px;
+        max-width: 100px;
+        max-height: 100px;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+        border: 5px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .card.hovercard .card-info {
+        position: absolute;
+        bottom: 122px;
+        left: 0;
+        right: 0;
+    }
+
+    .card.hovercard .card-info .card-title {
+        padding: 0 5px;
+        font-size: 20px;
+        line-height: 1;
+        color: #000000;
+        background-color: rgba(255, 255, 255, 0.1);
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+
+    .card.hovercard .card-info {
+        overflow: hidden;
+        font-size: 12px;
+        line-height: 20px;
+        color: #737373;
+        text-overflow: ellipsis;
+    }
+
+    .card.hovercard .bottom {
+        padding: 0 20px;
+        margin-bottom: 17px;
+    }
+
+    .btn-pref .btn {
+        -webkit-border-radius: 0 !important;
+    }
+</style>
