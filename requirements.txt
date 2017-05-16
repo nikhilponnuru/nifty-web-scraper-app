@@ -1,0 +1,8 @@
+BeautifulSoup==3.2.1
+beautifulsoup4==4.6.0
+bs4==0.0.1
+CherryPy==10.2.1
+Jinja2==2.9.6
+redis==2.10.5
+requests==2.14.2
+virtualenv==15.1.0
