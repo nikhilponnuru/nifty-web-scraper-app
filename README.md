@@ -2,11 +2,12 @@ A nifty web scraping web app built using cherrypy, python, html5 and css
 
 Install
 
-Cherrypy,
-Jinja,
-requests
+*Cherrypy
+*redis
+*Jinja
+*requests
 
-look into requirements.txt
+look into requirements.txt for exact versions 
 
 
 to execute-  python serve_requests.py  (make sure directory structure is not distrubed while downloading from here)
